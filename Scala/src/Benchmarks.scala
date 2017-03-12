@@ -59,14 +59,38 @@ object Benchmarks {
     return toReturn
   }
 
+
+
+  def readFileToMapOfLists(file: String): Map[String , List[(Double, String)]] =
+  {
+    val lines = fromFile(file).getLines
+    var mapForReturn: Map[String , List[(Double, String)]] = Map()
+    var index = 0
+    for(line <- lines)
+    {
+      var rowList = new ListBuffer[(Double, String)]
+      val splited = line.split(" +")
+        for(i <- 0 to splited.size - 1)
+          {
+            val weight = splited(i).toDouble
+            if(weight != 0) {
+              rowList += ((weight, i.toString))
+            }
+          }
+      mapForReturn.+=(index.toString ->rowList.toList)
+      index = index +1
+    }
+    return mapForReturn
+  }
+
   private def logPerf(elapsed: Long) = {
-    println("The execution took: " + elapsed)
+    println("The execution took: " + elapsed + " microseconds.")
   }
 
   def measure[T](block: => T): T = {
-    val started = System.currentTimeMillis()
+    val started = System.nanoTime()/1000
     val res = block
-    logPerf(System.currentTimeMillis - started)
+    logPerf(System.nanoTime()/1000 - started)
     res
   }
 
@@ -86,9 +110,19 @@ object Benchmarks {
         "e" -> List((4.0, "a"), (1.0, "b"), (3.0,"c"),(1.0,"d")),
         "f" -> Nil
       )
+
       val res = Dijkstra[String](lookup, List((0, List("a"))), "e", Set())
       measure(Dijkstra[String](lookup, List((0, List("a"))),"e",Set()))
       println(res)
 
+      var largeGraphFilePath = "C:\\Users\\Shane\\Documents\\CS4700-Benchmarking\\Benchmarking\\graph.txt"
+      val largeMap = readFileToMapOfLists(largeGraphFilePath)
+
+      val resLar = Dijkstra[String](largeMap,List((0, List("0"))), "99", Set());
+      measure(Dijkstra[String](largeMap,List((0, List("0"))), "99", Set()))
+      println(resLar);
+
     }
+
+
 }
