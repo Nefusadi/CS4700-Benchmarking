@@ -2,6 +2,8 @@
   * Created by Shane on 3/12/2017.
   */
 
+import java.io.File
+
 import scala.collection.mutable.ListBuffer
 import scala.io.Source._
 
@@ -31,7 +33,7 @@ object Benchmarks {
     case _ => fib(i - 1) + fib(i - 2)
   }
 
-  /** Dijkstra's Algorithm - Code taken from https://rosettacode.org/wiki/Dijkstra%27s_algorithm#Scala */
+  /** Dijkstra's Algorithm - Code from https://rosettacode.org/wiki/Dijkstra%27s_algorithm#Scala */
 
   type Path[Key] = (Double, List[Key])
 
@@ -95,28 +97,20 @@ object Benchmarks {
   }
 
     def main(args: Array[String]): Unit = {
+
+      var curDir = System.getProperty("user.dir")
+      var path = new File(curDir)
+      var parent = path.getParent()
+
       measure(fib(45))
 
-      var filepath = "C:\\Users\\Shane\\Documents\\CS4700-Benchmarking\\Benchmarking\\array.txt"
+      var filepath = parent + File.separator + "Benchmarking" + File.separator + "array.txt"
       val list = readFileToList(filepath)
       val sorted = measure(mergeSort(list))
 
-      /** from small graph */
-      val lookup = Map(
-        "a" -> List((3.0, "c"), (4.0, "e")),
-        "b" -> List((2.0, "c"), (1.0, "d"), (1.0,"e")),
-        "c" -> List((3.0, "a"), (2.0, "b"),(3.0,"e")),
-        "d" -> List((1.0, "b"), (1.0,"e")),
-        "e" -> List((4.0, "a"), (1.0, "b"), (3.0,"c"),(1.0,"d")),
-        "f" -> Nil
-      )
+      var graph = parent+ File.separator + "Benchmarking" + File.separator + "graph.txt"
 
-      val res = Dijkstra[String](lookup, List((0, List("a"))), "e", Set())
-      measure(Dijkstra[String](lookup, List((0, List("a"))),"e",Set()))
-      println(res)
-
-      var largeGraphFilePath = "C:\\Users\\Shane\\Documents\\CS4700-Benchmarking\\Benchmarking\\graph.txt"
-      val largeMap = readFileToMapOfLists(largeGraphFilePath)
+      val largeMap = readFileToMapOfLists(graph)
 
       val resLar = Dijkstra[String](largeMap,List((0, List("0"))), "99", Set());
       measure(Dijkstra[String](largeMap,List((0, List("0"))), "99", Set()))
