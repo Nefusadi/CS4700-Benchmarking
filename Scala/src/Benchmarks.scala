@@ -102,7 +102,7 @@ object Benchmarks {
       var path = new File(curDir)
       var parent = path.getParent()
 
-      measure(fib(45))
+      measure(fib(20))
 
       var filepath = parent + File.separator + "Benchmarking" + File.separator + "array.txt"
       val list = readFileToList(filepath)
